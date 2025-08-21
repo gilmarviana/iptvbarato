@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/logo-iptv.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffb300" />
+    
+    <!-- CSS Crítico Inline -->
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        background: #f7f7fa;
+        color: #181c2f;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.2rem 3vw;
+        background: #101223;
+        color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      }
+      .header__logo-img {
+        height: 50px;
+        width: auto;
+        max-width: 200px;
+        object-fit: contain;
+      }
+      .header__nav {
+        display: flex;
+        gap: 1.5rem;
+      }
+      .header__nav a {
+        color: #fff;
+        font-size: 1.08rem;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        transition: color 0.2s, background 0.2s;
+      }
+      .header__nav a:hover {
+        color: #ffb300;
+        background: #23243a;
+      }
+      .header__teste-btn {
+        background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
+        color: #181c2f;
+        padding: 0.7rem 1.5rem;
+        border-radius: 6px;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 1.08rem;
+        box-shadow: 0 2px 8px #ffb30033;
+        transition: background 0.2s, color 0.2s;
+        margin-left: 1.5rem;
+      }
+      .header__teste-btn:hover {
+        background: #ff9800;
+        color: #fff;
+      }
+      .hero {
+        background: linear-gradient(120deg, #181c2f 60%, #ffb300 100%);
+        color: #fff;
+        padding: 5rem 2rem 4rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        min-height: 350px;
+        box-shadow: 0 4px 24px #181c2f22;
+      }
+      .hero h1 {
+        font-size: 2.8rem;
+        font-weight: 900;
+        margin-bottom: 1.2rem;
+        letter-spacing: 1px;
+        text-shadow: 1px 2px 12px #00000055;
+      }
+      .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 2.2rem;
+        font-weight: 500;
+        text-shadow: 0 1px 8px #00000033;
+      }
+      .hero__btn {
+        background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
+        color: #181c2f;
+        padding: 1rem 2.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 1.25rem;
+        box-shadow: 0 2px 12px #ffb30033;
+        transition: background 0.2s, color 0.2s;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+      }
+      .hero__btn:hover {
+        background: #ff9800;
+        color: #fff;
+      }
+      @media (max-width: 700px) {
+        .header {
+          flex-direction: column;
+          gap: 0.7rem;
+          padding: 1rem 2vw;
+        }
+        .header__nav {
+          gap: 0.7rem;
+        }
+        .header__logo-img {
+          height: 40px;
+          max-width: 150px;
+        }
+        .header__teste-btn {
+          margin-left: 0;
+          width: 100%;
+          text-align: center;
+        }
+        .hero {
+          padding: 2.5rem 1rem 2rem 1rem;
+          min-height: 220px;
+        }
+        .hero h1 {
+          font-size: 1.5rem;
+        }
+        .hero__btn {
+          font-size: 1rem;
+          padding: 0.7rem 1.2rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .header__logo-img {
+          height: 35px;
+          max-width: 120px;
+        }
+        .header__nav {
+          gap: 0.5rem;
+        }
+        .header__nav a {
+          font-size: 0.9rem;
+          padding: 0.1rem 0.3rem;
+        }
+      }
+    </style>
+    
+    <!-- CSS Crítico Ultra-Otimizado -->
+    <style>
+      /* CSS crítico ultra-otimizado para renderização imediata */
+      body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:#f7f7fa;color:#181c2f;line-height:1.6}
+      #root{min-height:100vh;display:flex;flex-direction:column}
+      .hero{background:linear-gradient(120deg,#181c2f 60%,#ffb300 100%);color:#fff;padding:5rem 2rem 4rem 2rem;text-align:center;position:relative;overflow:hidden;min-height:350px;box-shadow:0 4px 24px #181c2f22}
+      .hero h1{font-size:2.8rem;font-weight:900;margin-bottom:1.2rem;letter-spacing:1px;text-shadow:1px 2px 12px #00000055}
+      .hero p{font-size:1.25rem;margin-bottom:2.2rem;font-weight:500;text-shadow:0 1px 8px #00000033}
+      .hero__btn{background:linear-gradient(90deg,#ffb300 60%,#ff9800 100%);color:#181c2f;padding:1rem 2.5rem;border-radius:8px;font-weight:bold;text-decoration:none;font-size:1.25rem;box-shadow:0 2px 12px #ffb30033;transition:background 0.2s,color 0.2s;margin-bottom:1.5rem;display:inline-block}
+      @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+      .loading-spinner{width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #d68910;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto}
+      @media (max-width:700px){.hero{padding:2.5rem 1rem 2rem 1rem;min-height:220px}.hero h1{font-size:1.5rem}.hero__btn{font-size:1rem;padding:0.7rem 1.2rem}.header{flex-direction:column;gap:1rem;padding:1rem}}
+      *{box-sizing:border-box}
+      @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-400.woff2') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-500.woff2') format('woff2');
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-600.woff2') format('woff2');
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-700.woff2') format('woff2');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Montserrat';
+        src: url('/fonts/Montserrat-900.woff2') format('woff2');
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
+    
+    <!-- Preload recursos críticos -->
+    <!-- Preload de imagens críticas otimizadas -->
+    <link rel="preload" href="%PUBLIC_URL%/images/optimized/logo-iptv-70.webp" as="image" type="image/webp">
+    <link rel="preload" href="%PUBLIC_URL%/images/optimized/logo-iptv-70.png" as="image" type="image/png">
+    
+    <!-- CSS principal não-bloqueante -->
+    <link rel="preload" href="%PUBLIC_URL%/static/css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="%PUBLIC_URL%/static/css/main.css"></noscript>
+    
+    <!-- Preload de recursos críticos -->
+    <link rel="preload" href="%PUBLIC_URL%/static/js/main.js" as="script">
+    <link rel="preload" href="%PUBLIC_URL%/static/js/vendors.js" as="script">
+    
+    <!-- Preload das fontes Montserrat locais -->
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Montserrat-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Montserrat-500.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Montserrat-600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Montserrat-700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Montserrat-900.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <meta name="description" content="IPTV Barato - A melhor lista IPTV do Brasil! Planos a partir de R$10,00/mês. +30.000 canais ao vivo, filmes, séries, futebol, estabilidade, suporte 24h e teste grátis. Assista em qualquer dispositivo: Smart TV, TV Box, Android, iOS, PC." />
+    <meta name="keywords" content="IPTV, IPTV Brasil, IPTV Barato, canais ao vivo, filmes online, séries online, futebol ao vivo, lista IPTV, TV online, TV por internet, teste IPTV grátis, IPTV estável, IPTV premium, suporte 24h, 4K, FHD, HD, TV Box, Smart TV, Chromecast, programação EPG, conteúdo atualizado, promoções IPTV, planos baratos, R$10,00, R$79,00, R$99,00, Mundial de Clubes, Premier League, Champions League, Brasileirão, Libertadores, Netflix, HBO Max, Disney+, Prime Video, Telecine, Sportv, ESPN, canais adultos, rádios online, IPTV sem fidelidade, IPTV com qualidade, melhor IPTV 2024, IPTV confiável, IPTV rápido, IPTV sem travamentos, IPTV com EPG, IPTV multi tela, IPTV para Smart TV, IPTV para Android, IPTV para iOS, IPTV para PC, IPTV para TV Box, IPTV para Chromecast, IPTV para Fire Stick, IPTV para Roku, IPTV para Xbox, IPTV para PlayStation, IPTV para Apple TV, IPTV para Samsung TV, IPTV para LG TV, IPTV para Sony TV, IPTV para Philips TV, IPTV para Panasonic TV, IPTV para Sharp TV, IPTV para Toshiba TV, IPTV para Hisense TV, IPTV para TCL TV, IPTV para Xiaomi TV, IPTV para Motorola TV, IPTV para AOC TV, IPTV para Multilaser TV, IPTV para Positivo TV, IPTV para CCE TV, IPTV para Gradiente TV, IPTV para Semp TV, IPTV para Philco TV, IPTV para ProScan TV, IPTV para Westinghouse TV, IPTV para Curtis TV, IPTV para Funai TV, IPTV para Sanyo TV, IPTV para JVC TV, IPTV para Akai TV, IPTV para Daewoo TV, IPTV para Goldstar TV, IPTV para Hitachi TV, IPTV para Mitsubishi TV, IPTV para NEC TV, IPTV para Pioneer TV, IPTV para Sansui TV, IPTV para Seiki TV, IPTV para Vizio TV, IPTV para Insignia TV, IPTV para Element TV, IPTV para Sceptre TV, IPTV para Onn TV, IPTV para TCL Roku TV, IPTV para Sharp Roku TV, IPTV para Hisense Roku TV, IPTV para TCL Android TV, IPTV para Sony Android TV, IPTV para Philips Android TV, IPTV para Sharp Android TV, IPTV para Hisense Android TV, IPTV para Xiaomi Android TV, IPTV para Motorola Android TV, IPTV para AOC Android TV, IPTV para Multilaser Android TV, IPTV para Positivo Android TV, IPTV para CCE Android TV, IPTV para Gradiente Android TV, IPTV para Semp Android TV, IPTV para Philco Android TV, IPTV para ProScan Android TV, IPTV para Westinghouse Android TV, IPTV para Curtis Android TV, IPTV para Funai Android TV, IPTV para Sanyo Android TV, IPTV para JVC Android TV, IPTV para Akai Android TV, IPTV para Daewoo Android TV, IPTV para Goldstar Android TV, IPTV para Hitachi Android TV, IPTV para Mitsubishi Android TV, IPTV para NEC Android TV, IPTV para Pioneer Android TV, IPTV para Sansui Android TV, IPTV para Seiki Android TV, IPTV para Vizio Android TV, IPTV para Insignia Android TV, IPTV para Element Android TV, IPTV para Sceptre Android TV, IPTV para Onn Android TV" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="IPTV Barato - Grupo GM" />
+    <meta name="language" content="pt-BR" />
+    <meta name="geo.region" content="BR" />
+    <meta name="geo.placename" content="Brasil" />
+    <meta name="geo.position" content="-14.235004;-51.92528" />
+    <meta name="ICBM" content="-14.235004, -51.92528" />
+    <link rel="canonical" href="https://iptvbarato.site/" />
+    <link rel="alternate" hreflang="pt-BR" href="https://iptvbarato.site/" />
+    <link rel="alternate" hreflang="x-default" href="https://iptvbarato.site/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://iptvbarato.site/" />
+    <meta property="og:title" content="IPTV Barato - Planos a partir de R$10,00/mês | +30.000 Canais, Filmes, Séries e Futebol ao Vivo | Teste Grátis 4h" />
+    <meta property="og:description" content="A melhor lista IPTV do Brasil! Planos a partir de R$10,00/mês. +30.000 canais ao vivo, filmes, séries, futebol, estabilidade, suporte 24h e teste grátis. Assista em qualquer dispositivo." />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="IPTV Barato - A melhor lista IPTV do Brasil" />
+    <meta property="og:site_name" content="IPTV Barato" />
+    <meta property="og:locale" content="pt_BR" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://iptvbarato.site/" />
+    <meta name="twitter:title" content="IPTV Barato - Planos a partir de R$10,00/mês | +30.000 Canais, Filmes, Séries e Futebol ao Vivo | Teste Grátis 4h" />
+    <meta name="twitter:description" content="A melhor lista IPTV do Brasil! Planos a partir de R$10,00/mês. +30.000 canais ao vivo, filmes, séries, futebol, estabilidade, suporte 24h e teste grátis." />
+    <meta name="twitter:image" content="%PUBLIC_URL%/og-image.jpg" />
+    <meta name="twitter:image:alt" content="IPTV Barato - A melhor lista IPTV do Brasil" />
+    
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "IPTV Barato",
+        "alternateName": "Grupo GM IPTV",
+        "url": "https://iptvbarato.site/",
+        "logo": "https://iptvbarato.site/logo512.png",
+        "description": "A melhor lista IPTV do Brasil com planos a partir de R$10,00/mês. +30.000 canais ao vivo, filmes, séries e futebol com qualidade 4K/FHD/HD.",
+        "foundingDate": "2023",
+        "contactPoint": [{
+          "@type": "ContactPoint",
+          "telephone": "+55-19-99830-5956",
+          "contactType": "customer service",
+          "areaServed": "BR",
+          "availableLanguage": ["Portuguese", "Spanish"],
+          "hoursAvailable": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+            ],
+            "opens": "00:00",
+            "closes": "23:59"
+          }
+        }],
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "BR"
+        },
+        "sameAs": [
+          "https://api.whatsapp.com/send?phone=5519998305956"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "10.00",
+          "priceCurrency": "BRL",
+          "description": "Plano Semestral IPTV Barato - 2 telas, +30.000 conteúdos, qualidade 4K/FHD/HD"
+        }
+      }
+    </script>
+    
+    <!-- Schema.org WebSite -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://iptvbarato.site/",
+        "name": "IPTV Barato",
+        "description": "A melhor lista IPTV do Brasil com planos a partir de R$10,00/mês",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://iptvbarato.site/?s={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    
+    <!-- Schema.org Service -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "IPTV Barato",
+        "description": "Serviço de IPTV premium com +30.000 canais, filmes, séries e futebol ao vivo",
+        "provider": {
+          "@type": "Organization",
+          "name": "IPTV Barato"
+        },
+        "areaServed": "BR",
+        "serviceType": "IPTV Streaming",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Plano Mensal",
+            "price": "10.00 / 1º mês",
+            "priceCurrency": "BRL",
+            "description": "1 tela, +30.000 conteúdos, qualidade 4K/FHD/HD/SD"
+          },
+          {
+            "@type": "Offer",
+            "name": "Plano Semestral",
+            "price": "79.00",
+            "priceCurrency": "BRL",
+            "description": "2 telas, +30.000 conteúdos, qualidade 4K/FHD/HD/SD"
+          },
+          {
+            "@type": "Offer",
+            "name": "Plano Anual",
+            "price": "99.00",
+            "priceCurrency": "BRL",
+            "description": "3 telas, +30.000 conteúdos, qualidade 4K/FHD/HD/SD"
+          }
+        ]
+      }
+    </script>
+    
+    <!-- Schema.org FAQPage -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Quais são os valores dos planos IPTV Barato?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Temos planos a partir de R$10,00/mês (Mensal), R$79,00 (Semestral) e R$99,00 (Anual). Todos com mais de 30.000 conteúdos, canais, filmes, séries e futebol ao vivo com qualidade 4K/FHD/HD."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Como funciona o IPTV Barato?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Você precisa de uma internet com no mínimo 10MB de velocidade e um desses aparelhos: Smart TV, TV Box, Smartphone (Android ou iOS), Tablet, PC, Notebook, PlayStation 4 ou Xbox One."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Qual o suporte oferecido?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Suporte qualificado 24h via WhatsApp e Chat. Qualquer problema que ocorrer estaremos à disposição para resolver rapidamente."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Como funciona o pagamento?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Possuímos planos mensais, semestrais e anuais com grandes descontos, sem fidelidade. Pagamento via PIX, cartão de crédito ou boleto bancário."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Qual a diferença entre IPTV e P2P?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "O sistema IPTV conta com incrível compatibilidade com diversos dispositivos. O sistema P2P funciona somente em Android, requer menos internet, mas tem maior atraso (delay)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quantos dispositivos posso usar?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Depende do plano: Mensal (1 tela), Semestral (2 telas), Anual (3 telas). Você pode assistir simultaneamente em diferentes dispositivos."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Tem teste grátis?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sim! Oferecemos 4 horas de teste grátis para você conhecer nossa qualidade e estabilidade antes de contratar."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quais canais de futebol estão incluídos?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Todos os principais canais: Sportv, ESPN, Premiere, TNT Sports, Band Sports, Fox Sports, além de canais internacionais como Sky Sports, beIN Sports e muito mais."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Tem filmes e séries atualizados?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sim! Temos todo o catálogo dos principais streamings: Netflix, HBO Max, Disney+, Prime Video, Paramount+, Star+, Apple TV+ e muito mais."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Funciona em Smart TV?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sim! Funciona em todas as Smart TVs: Samsung, LG, Sony, Philips, Panasonic, Sharp, Toshiba, Hisense, TCL, Xiaomi e outras."
+            }
+          }
+        ]
+      }
+    </script>
+    
+    <title>IPTV Barato - Planos a partir de R$10,00/mês | +30.000 Canais, Filmes, Séries e Futebol ao Vivo | Teste Grátis 4h</title>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FJ948RV"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <noscript>Você precisa habilitar o JavaScript para rodar este app.</noscript>
+    <div id="root"></div>
+    
+    <!-- Google Analytics e Tag Manager - Carregamento otimizado -->
+    <script>
+      // Sistema de analytics otimizado - carregamento condicional
+      (function() {
+        'use strict';
+        
+        // Carregar analytics apenas após interação do usuário
+        function initAnalytics() {
+          // Verificar se já foi carregado
+          if (window.analyticsLoaded) return;
+          
+          // Aguardar interação do usuário
+          const events = ['click', 'scroll', 'keydown', 'touchstart'];
+          let hasInteracted = false;
+          
+          function loadAnalytics() {
+            if (hasInteracted) return;
+            hasInteracted = true;
+            
+            // Remover listeners
+            events.forEach(event => document.removeEventListener(event, loadAnalytics));
+            
+            // Carregar Google Analytics apenas se o usuário interagiu por mais de 5 segundos
+            setTimeout(() => {
+              if (!window.gtag) {
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+                script.onload = function() {
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  window.gtag = gtag;
+                  gtag('js', new Date());
+                  gtag('config', 'G-XXXXXXXXXX', {
+                    'page_title': 'IPTV Barato - A melhor lista IPTV do Brasil',
+                    'page_location': 'https://iptvbarato.site/',
+                    'send_page_view': false
+                  });
+                };
+                script.onerror = function() {
+                  console.warn('Google Analytics não pôde ser carregado');
+                };
+                document.head.appendChild(script);
+              }
+            }, 2000);
+          }
+          
+          // Adicionar listeners para interação
+          events.forEach(event => document.addEventListener(event, loadAnalytics, { once: true }));
+          
+          // Fallback: carregar após 20 segundos apenas se o usuário ainda estiver na página
+          setTimeout(() => {
+            if (document.visibilityState === 'visible') {
+              loadAnalytics();
+            }
+          }, 20000);
+          
+          window.analyticsLoaded = true;
+        }
+        
+        // Inicializar quando o DOM estiver pronto
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initAnalytics);
+        } else {
+          initAnalytics();
+        }
+      })();
+    </script>
+  </body>
+</html>

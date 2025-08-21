@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/conteudo.html",
+      "destination": "/conteudo.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
