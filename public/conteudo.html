@@ -650,6 +650,114 @@
                 margin-right: 0;
             }
         }
+
+        /* Busca Global */
+        .global-search-controls {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 179, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .global-search-section h3 {
+            color: #ffb300;
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .server-selection {
+            margin-bottom: 1rem;
+        }
+
+        .server-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .server-controls .btn {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .server-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .server-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .server-checkbox:hover {
+            background: rgba(255, 179, 0, 0.1);
+        }
+
+        .server-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ffb300;
+            cursor: pointer;
+        }
+
+        .server-checkbox label {
+            cursor: pointer;
+            color: #ecf0f1;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .global-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .global-search-info {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .server-checkboxes {
+                grid-template-columns: 1fr;
+            }
+
+            .server-controls {
+                flex-direction: column;
+            }
+
+            .global-filters {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -691,6 +799,33 @@
                 <button onclick="m3uManager.search()" class="btn primary">🔍 Buscar</button>
                 <button onclick="m3uManager.clearFilters()" class="btn">🗑️ Limpar</button>
                 <button onclick="m3uManager.toggleGlobalSearch()" class="btn" id="globalSearchBtn">🌐 Busca Global</button>
+            </div>
+        </div>
+
+        <!-- Controles de Busca Global -->
+        <div id="global-search-controls" class="global-search-controls" style="display: none;">
+            <div class="global-search-section">
+                <h3>🌐 Busca Global - Selecione os Servidores</h3>
+                <div class="server-selection">
+                    <div class="server-controls">
+                        <button onclick="m3uManager.selectAllServers()" class="btn secondary">✅ Selecionar Todos</button>
+                        <button onclick="m3uManager.deselectAllServers()" class="btn secondary">❌ Desmarcar Todos</button>
+                    </div>
+                    <div id="server-checkboxes" class="server-checkboxes">
+                        <!-- Checkboxes dos servidores serão carregados aqui -->
+                    </div>
+                </div>
+                <div class="global-filters">
+                    <select id="globalCategoryFilter" class="filter-select">
+                        <option value="">Todas as Categorias</option>
+                    </select>
+                    <select id="globalServerFilter" class="filter-select">
+                        <option value="">Todos os Servidores</option>
+                    </select>
+                    <div class="global-search-info">
+                        <span id="selected-servers-count">0 servidores selecionados</span>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -897,6 +1032,22 @@
                         this.applyFilters();
                     }
                 });
+
+                // Event listeners para filtros globais
+                const globalCategoryFilter = document.getElementById('globalCategoryFilter');
+                const globalServerFilter = document.getElementById('globalServerFilter');
+
+                globalCategoryFilter.addEventListener('change', () => {
+                    if (this.hasSearched && this.isGlobalSearch) {
+                        this.applyGlobalFilters();
+                    }
+                });
+
+                globalServerFilter.addEventListener('change', () => {
+                    if (this.hasSearched && this.isGlobalSearch) {
+                        this.applyGlobalFilters();
+                    }
+                });
                 
                 // Event listeners para o modal
                 modal.addEventListener('click', (e) => {
@@ -972,28 +1123,31 @@
                 }
             }
             
-            async loadM3UContent() {
-                if (!this.m3uUrls[this.currentList]) {
-                    throw new Error('URL do servidor não encontrada');
+            async loadM3UContent(targetServer = null) {
+                const serverName = targetServer || this.currentList;
+
+                if (!this.m3uUrls[serverName]) {
+                    throw new Error(`URL do servidor ${serverName} não encontrada`);
                 }
-                
-                const response = await fetch(this.m3uUrls[this.currentList]);
+
+                const response = await fetch(this.m3uUrls[serverName]);
                 if (!response.ok) {
-                    throw new Error(`Erro ao carregar playlist: ${response.status}`);
+                    throw new Error(`Erro ao carregar playlist do ${serverName}: ${response.status}`);
                 }
-                
+
                 const content = await response.text();
-                this.parseM3UContent(content);
+                this.parseM3UContent(content, serverName);
             }
             
-            parseM3UContent(content) {
+            parseM3UContent(content, targetServer = null) {
+                const serverName = targetServer || this.currentList;
                 const lines = content.split('\n');
                 const channels = [];
                 let currentChannel = null;
-                
+
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i].trim();
-                    
+
                     if (line.startsWith('#EXTINF:')) {
                         currentChannel = {
                             name: '',
@@ -1001,7 +1155,7 @@
                             logo: '',
                             category: '',
                             quality: '',
-                            server: this.getListDisplayName(this.currentList)
+                            server: this.getListDisplayName(serverName)
                         };
                         
                         // Extrair informações do canal
@@ -1047,8 +1201,12 @@
                     }
                 }
                 
-                this.channels[this.currentList] = channels;
-                this.updateCategoryFilter();
+                this.channels[serverName] = channels;
+
+                // Só atualizar o filtro de categoria se estivermos parseando o servidor atual
+                if (serverName === this.currentList) {
+                    this.updateCategoryFilter();
+                }
             }
             
             updateCategoryFilter() {
@@ -1111,10 +1269,21 @@
                                 name: groupKey,
                                 logo: channel.logo,
                                 category: channel.category,
-                                items: []
+                                items: [],
+                                filtered: true
                             };
                         }
-                        groups[groupKey].items.push(channel);
+
+                        // Only add items that pass the global filters
+                        const categoryFilter = document.getElementById('globalCategoryFilter').value;
+                        const serverFilter = document.getElementById('globalServerFilter').value;
+
+                        const matchesCategory = !categoryFilter || channel.category === categoryFilter;
+                        const matchesServer = !serverFilter || channel.server === serverFilter;
+
+                        if (matchesCategory && matchesServer) {
+                            groups[groupKey].items.push(channel);
+                        }
                     } else {
                         // Conteúdo standalone
                         standalone.push(channel);
@@ -1480,10 +1649,18 @@
                 document.getElementById('searchInput').value = '';
                 document.getElementById('categoryFilter').value = '';
                 document.getElementById('qualityFilter').value = '';
-                
+
+                // Limpar filtros globais também
+                if (this.isGlobalSearch) {
+                    document.getElementById('globalCategoryFilter').value = '';
+                    document.getElementById('globalServerFilter').value = '';
+                    this.filteredChannelsRaw = [];
+                }
+
                 this.hasSearched = false;
                 this.filteredChannels = [];
-                
+                this.totalDisplayItems = 0;
+
                 document.getElementById('welcome').style.display = 'block';
                 document.getElementById('content').innerHTML = '';
                 document.getElementById('stats').style.display = 'none';
@@ -1493,23 +1670,309 @@
             toggleGlobalSearch() {
                 this.isGlobalSearch = !this.isGlobalSearch;
                 const btn = document.getElementById('globalSearchBtn');
-                
+                const globalControls = document.getElementById('global-search-controls');
+
                 if (this.isGlobalSearch) {
                     btn.textContent = '🌐 Busca Global (Ativa)';
                     btn.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                    globalControls.style.display = 'block';
+                    this.createServerCheckboxes();
+                    this.updateSelectedServersCount();
                 } else {
                     btn.textContent = '🌐 Busca Global';
                     btn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+                    globalControls.style.display = 'none';
                 }
-                
+
                 this.clearFilters();
             }
-            
-            async performGlobalSearch(searchTerm) {
-                // Implementação simplificada da busca global
-                this.showError('Busca global ainda não implementada. Use a busca individual por servidor.');
+
+            createServerCheckboxes() {
+                const container = document.getElementById('server-checkboxes');
+                container.innerHTML = '';
+
+                Object.entries(this.m3uUrls).forEach(([serverName, serverUrl]) => {
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.className = 'server-checkbox';
+
+                    const isSelected = this.selectedGlobalServers.includes(serverName);
+
+                    checkboxDiv.innerHTML = `
+                        <input type="checkbox" id="server-${serverName}" ${isSelected ? 'checked' : ''}
+                               onchange="m3uManager.updateServerSelection('${serverName}', this.checked)">
+                        <label for="server-${serverName}">${serverName}</label>
+                    `;
+
+                    container.appendChild(checkboxDiv);
+                });
             }
-            
+
+            updateServerSelection(serverName, isSelected) {
+                if (isSelected) {
+                    if (!this.selectedGlobalServers.includes(serverName)) {
+                        this.selectedGlobalServers.push(serverName);
+                    }
+                } else {
+                    this.selectedGlobalServers = this.selectedGlobalServers.filter(s => s !== serverName);
+                }
+
+                this.updateSelectedServersCount();
+            }
+
+            selectAllServers() {
+                this.selectedGlobalServers = Object.keys(this.m3uUrls);
+                this.createServerCheckboxes();
+                this.updateSelectedServersCount();
+            }
+
+            deselectAllServers() {
+                this.selectedGlobalServers = [];
+                this.createServerCheckboxes();
+                this.updateSelectedServersCount();
+            }
+
+            updateSelectedServersCount() {
+                const countElement = document.getElementById('selected-servers-count');
+                const count = this.selectedGlobalServers.length;
+                const total = Object.keys(this.m3uUrls).length;
+
+                countElement.textContent = `${count} de ${total} servidores selecionados`;
+
+                if (count === 0) {
+                    countElement.style.background = 'rgba(231, 76, 60, 0.2)';
+                    countElement.style.color = '#e74c3c';
+                } else if (count === total) {
+                    countElement.style.background = 'rgba(39, 174, 96, 0.2)';
+                    countElement.style.color = '#27ae60';
+                } else {
+                    countElement.style.background = 'rgba(52, 152, 219, 0.2)';
+                    countElement.style.color = '#3498db';
+                }
+            }
+
+            async performGlobalSearch(searchTerm) {
+                if (this.selectedGlobalServers.length === 0) {
+                    this.showError('Selecione pelo menos um servidor para realizar a busca global.');
+                    return;
+                }
+
+                // Mostrar loading
+                document.getElementById('content').innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #bdc3c7;">
+                        <div class="spinner" style="margin: 0 auto 1rem auto;"></div>
+                        <h3>🌐 Realizando Busca Global...</h3>
+                        <p>Pesquisando em ${this.selectedGlobalServers.length} servidor(es) selecionado(s)</p>
+                        <div id="search-progress" style="margin-top: 1rem;">
+                            <div>Iniciando busca...</div>
+                        </div>
+                    </div>
+                `;
+
+                try {
+                    const allResults = [];
+                    let completedServers = 0;
+                    const serverResults = new Map(); // Para rastrear resultados de cada servidor
+
+                    const updateProgress = (message, serverName = null) => {
+                        const progressDiv = document.getElementById('search-progress');
+                        if (progressDiv) {
+                            const serverStatus = serverName ? `<strong>${serverName}</strong>: ${message}` : message;
+                            const progressText = `Progresso: ${completedServers}/${this.selectedGlobalServers.length} servidores concluídos`;
+                            progressDiv.innerHTML = `
+                                <div style="margin-bottom: 0.5rem;">${serverStatus}</div>
+                                <div>${progressText}</div>
+                            `;
+                        }
+                    };
+
+                    // Criar promessas para cada servidor
+                    const searchPromises = this.selectedGlobalServers.map(async (serverName) => {
+                        try {
+                            updateProgress('Carregando conteúdo...', serverName);
+
+                            // Carregar o conteúdo do servidor se ainda não estiver carregado
+                            if (!this.channels[serverName]) {
+                                await this.loadM3UContent(serverName);
+                            }
+
+                            updateProgress('Pesquisando...', serverName);
+
+                            // Filtrar resultados
+                            let serverResultCount = 0;
+                            if (this.channels[serverName]) {
+                                const results = this.channels[serverName].filter(channel =>
+                                    channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+                                );
+
+                                // Adicionar informação do servidor a cada resultado
+                                results.forEach(result => {
+                                    if (!result.server) {
+                                        result.server = this.getListDisplayName(serverName);
+                                    }
+                                });
+
+                                serverResults.set(serverName, results);
+                                allResults.push(...results);
+                                serverResultCount = results.length;
+                            }
+
+                            completedServers++;
+                            updateProgress(`Concluído! ${serverResultCount} resultado(s) encontrado(s)`, serverName, allResults.length);
+
+                            return { serverName, success: true, count: serverResultCount };
+
+                        } catch (error) {
+                            console.error(`Erro ao pesquisar no servidor ${serverName}:`, error);
+                            completedServers++;
+                            updateProgress(`Erro: ${error.message}`, serverName, allResults.length);
+                            return { serverName, success: false, error: error.message };
+                        }
+                    });
+
+                    // Aguardar todas as buscas com Promise.allSettled para não falhar se um servidor der erro
+                    updateProgress('Aguardando conclusão de todos os servidores...');
+                    const results = await Promise.allSettled(searchPromises);
+
+                    // Processar resultados
+                    let successfulServers = 0;
+                    let failedServers = 0;
+
+                    results.forEach(result => {
+                        if (result.status === 'fulfilled' && result.value.success) {
+                            successfulServers++;
+                        } else {
+                            failedServers++;
+                        }
+                    });
+
+                    // Definir resultados
+                    this.filteredChannels = allResults;
+                    this.filteredChannelsRaw = [...allResults];
+                    this.hasSearched = true;
+                    this.currentPage = 1;
+
+                    // Aplicar filtros adicionais se necessário
+                    const categoryFilter = document.getElementById('globalCategoryFilter').value;
+                    const serverFilter = document.getElementById('globalServerFilter').value;
+
+                    if (categoryFilter || serverFilter) {
+                        this.filteredChannels = this.filteredChannels.filter(channel => {
+                            const matchesCategory = !categoryFilter || channel.category === categoryFilter;
+                            const matchesServer = !serverFilter || channel.server === serverFilter;
+                            return matchesCategory && matchesServer;
+                        });
+                    }
+
+                    // Exibir resultados
+                    this.displayContent();
+                    this.updateStats();
+                    this.updatePagination();
+
+                    // Atualizar filtros com dados globais
+                    this.updateGlobalFilters();
+
+                    // Mostrar resumo da busca
+                    console.log(`Busca global concluída: ${successfulServers} servidores ok, ${failedServers} com erro, ${allResults.length} resultados encontrados`);
+
+                    // Se nenhum resultado foi encontrado, mostrar mensagem apropriada
+                    if (allResults.length === 0) {
+                        const errorMsg = failedServers > 0
+                            ? `Nenhum resultado encontrado. ${failedServers} servidor(es) apresentaram erro.`
+                            : 'Nenhum resultado encontrado para o termo pesquisado.';
+                        this.showError(errorMsg);
+                    }
+
+                } catch (error) {
+                    console.error('Erro na busca global:', error);
+                    this.showError(`Erro na busca global: ${error.message}`);
+                }
+            }
+
+            processSearchResults(results) {
+                let successfulServers = 0;
+                let failedServers = 0;
+
+                results.forEach(result => {
+                    if (result.status === 'fulfilled' && result.value.success) {
+                        successfulServers++;
+                    } else {
+                        failedServers++;
+                    }
+                });
+
+                return { successfulServers, failedServers };
+            }
+
+            setupFilteredResults(results) {
+                this.filteredChannels = results;
+                this.filteredChannelsRaw = [...results];
+                this.hasSearched = true;
+                this.currentPage = 1;
+            }
+
+            applyGlobalFilters() {
+                const categoryFilter = document.getElementById('globalCategoryFilter').value;
+                const serverFilter = document.getElementById('globalServerFilter').value;
+
+                if (categoryFilter || serverFilter) {
+                    this.filteredChannels = this.filteredChannels.filter(channel => {
+                        const matchesCategory = !categoryFilter || channel.category === categoryFilter;
+                        const matchesServer = !serverFilter || channel.server === serverFilter;
+                        return matchesCategory && matchesServer;
+                    });
+                }
+            }
+
+            updateInterface() {
+                this.displayContent();
+                this.updateStats();
+                this.updatePagination();
+                this.updateGlobalFilters();
+            }
+
+            showSearchFeedback(totalResults, successfulServers, failedServers) {
+                console.log(`Busca global concluída: ${successfulServers} servidores ok, ${failedServers} com erro, ${totalResults} resultados encontrados`);
+
+                if (totalResults === 0) {
+                    const errorMsg = failedServers > 0
+                        ? `Nenhum resultado encontrado. ${failedServers} servidor(es) apresentaram erro.`
+                        : 'Nenhum resultado encontrado para o termo pesquisado.';
+                    this.showError(errorMsg);
+                }
+            }
+
+            updateGlobalFilters() {
+                // Atualizar filtro de categorias
+                const categoryFilter = document.getElementById('globalCategoryFilter');
+                const categories = new Set();
+
+                this.filteredChannelsRaw.forEach(channel => {
+                    if (channel.category) {
+                        categories.add(channel.category);
+                    }
+                });
+
+                categoryFilter.innerHTML = '<option value="">Todas as Categorias</option>';
+                [...categories].sort().forEach(category => {
+                    categoryFilter.innerHTML += `<option value="${category}">${category}</option>`;
+                });
+
+                // Atualizar filtro de servidores
+                const serverFilter = document.getElementById('globalServerFilter');
+                const servers = new Set();
+
+                this.filteredChannelsRaw.forEach(channel => {
+                    if (channel.server) {
+                        servers.add(channel.server);
+                    }
+                });
+
+                serverFilter.innerHTML = '<option value="">Todos os Servidores</option>';
+                [...servers].sort().forEach(server => {
+                    serverFilter.innerHTML += `<option value="${server}">${server}</option>`;
+                });
+            }
+
             showError(message) {
                 document.getElementById('content').innerHTML = `
                     <div class="error">
@@ -1520,7 +1983,7 @@
                 document.getElementById('welcome').style.display = 'none';
             }
         }
-        
+
         // Inicializar o gerenciador
         const m3uManager = new M3UContentManager();
     </script>
